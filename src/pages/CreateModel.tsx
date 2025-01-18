@@ -58,8 +58,8 @@ const CreateModelPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 mx-auto max-w-4xl bg-red-500">
-      <h1 className="mb-6 text-2xl font-bold">API Management</h1>
+    <div className="p-6 mx-auto max-w-4xl">
+      <h1 className="mb-6 text-2xl font-bold">Create Model</h1>
 
       <div className="flex flex-col gap-4 mb-6 sm:flex-row">
         <Select value={selectedModel} onValueChange={setSelectedModel}>
@@ -79,7 +79,7 @@ const CreateModelPage: React.FC = () => {
       </div>
 
       <div className="mb-6">
-        <h2 className="mb-2 text-xl font-semibold">Current APIs</h2>
+        <h2 className="mb-2 text-xl font-semibold">Current Deployed Models</h2>
         <Table>
           <TableHeader>
             <TableRow>

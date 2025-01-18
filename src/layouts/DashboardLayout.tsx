@@ -1,12 +1,9 @@
 import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { MenuIcon } from "lucide-react";
 import Sidebar from "../components/sidebar";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const openSidebar = () => {
@@ -21,10 +18,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />
 
-      {/* Main content */}
       <div className="flex overflow-hidden flex-col flex-1">
         <header className="bg-white shadow-sm">
           <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -40,7 +35,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         </header>
         <main className="overflow-y-auto overflow-x-hidden flex-1 bg-gray-100">
           <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            {children}
+            <Outlet />
           </div>
         </main>
       </div>
