@@ -25,7 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeSidebar }) => {
           <XIcon className="w-6 h-6" />
         </button>
       </div>
-
       {/* Navigation Links */}
       <nav className="mt-8">
         <ul>
@@ -37,16 +36,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeSidebar }) => {
           </li>
         </ul>
       </nav>
-
       {/* Footer Close Button */}
-      <div className="p-4 mt-auto">
+      {/* <div className="p-4 mt-auto">
         <button
           onClick={closeSidebar}
           className="px-4 py-2 w-full text-sm bg-red-600 rounded-md hover:bg-red-700"
         >
           Close Sidebar
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
