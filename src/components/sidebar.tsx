@@ -18,7 +18,7 @@ export function Sidebar() {
 
   return (
     <SidebarProvider>
-      <ShadcnSidebar className="w-64 border-r border-gray-200">
+      <ShadcnSidebar className="flex-shrink-0 w-64 h-full border-r border-gray-200">
         <SidebarHeader className="p-4">
           <h2 className="text-xl font-bold">Manage Deployments</h2>
         </SidebarHeader>
