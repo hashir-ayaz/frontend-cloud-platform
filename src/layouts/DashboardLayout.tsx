@@ -9,13 +9,20 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const openSidebar = () => {
+    console.log("Opening sidebar");
+    setSidebarOpen(true);
+  };
+
+  const closeSidebar = () => {
+    console.log("Closing sidebar");
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarOpen}
-        closeSidebar={() => setSidebarOpen(false)}
-      />
+      <Sidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />
 
       {/* Main content */}
       <div className="flex overflow-hidden flex-col flex-1">
@@ -23,12 +30,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-semibold text-gray-900">
-                Dashboard
+                Dashboard!
               </h1>
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="md:hidden"
-              >
+              <button onClick={openSidebar} className="md:hidden">
                 <MenuIcon className="w-6 h-6" />
               </button>
             </div>
