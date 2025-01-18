@@ -1,71 +1,37 @@
 import React from "react";
-import { Laptop, Plus } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Sidebar as ShadcnSidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { XIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export function Sidebar() {
-  const location = useLocation();
-
-  const isActive = (path: string) => location.pathname.startsWith(path);
-
-  return (
-    <SidebarProvider>
-      <ShadcnSidebar className="w-64 border-r border-gray-200">
-        <SidebarHeader className="p-4">
-          <h2 className="text-xl font-bold">Manage Deployments</h2>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {/* Deployed Models Link */}
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive("/dashboard/deployed-models")}
-              >
-                <Link
-                  to="/dashboard/deployed-models"
-                  className={`flex items-center ${
-                    isActive("/dashboard/deployed-models")
-                      ? "font-bold text-blue-500"
-                      : "text-gray-600"
-                  }`}
-                >
-                  <Laptop className="mr-2 w-4 h-4" />
-                  <span>Deployed Models</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
-            {/* Create Model Link */}
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive("/dashboard/create-model")}
-              >
-                <Link
-                  to="/dashboard/create-model"
-                  className={`flex items-center ${
-                    isActive("/dashboard/create-model")
-                      ? "font-bold text-blue-500"
-                      : "text-gray-600"
-                  }`}
-                >
-                  <Plus className="mr-2 w-4 h-4" />
-                  <span>Create New Model</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarContent>
-      </ShadcnSidebar>
-    </SidebarProvider>
-  );
+interface SidebarProps {
+  isOpen: boolean;
+  closeSidebar: () => void;
 }
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeSidebar }) => {
+  return (
+    <div
+      className={`${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      } fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white transition duration-300 ease-in-out transform md:relative md:translate-x-0`}
+    >
+      <div className="flex justify-between items-center p-4">
+        <span className="text-2xl font-semibold">Admin Panel</span>
+        <button onClick={closeSidebar} className="md:hidden">
+          <XIcon className="w-6 h-6" />
+        </button>
+      </div>
+      <nav className="mt-8">
+        <ul>
+          <li className="px-4 py-2 hover:bg-gray-700">
+            <Link to="/dashboard/create-model">Create Model</Link>
+          </li>
+          <li className="px-4 py-2 hover:bg-gray-700">
+            <Link to="/dashboard/deployed-models">Deployed Models</Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;
