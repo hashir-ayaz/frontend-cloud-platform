@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { login, signup } from "../api/loginservice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,32 +21,42 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the login or signup logic
-    if (isLogin) {
-      login(email, password);
-    } else {
-      signup(name, email, password);
+
+    try {
+      if (isLogin) {
+        // Attempt login
+        await login(email, password);
+        alert("Login successful!");
+      } else {
+        // Attempt signup
+        await signup(name, email, password);
+        alert("Signup successful!");
+      }
+
+      // Reset form fields
+      setEmail("");
+      setPassword("");
+      setName("");
+
+      navigate(isLogin ? "/dashboard" : "/dashboard");
+
+      // Log the action for debugging purposes
+      console.log(isLogin ? "Logged in:" : "Signed up:", { email, name });
+    } catch (error: unknown) {
+      // Handle error
+      if (error instanceof Error) {
+        alert(`An error occurred: ${error.message}`);
+        console.error("Error details:", error.message);
+      } else {
+        alert("An unexpected error occurred. Please try again.");
+        console.error("Unknown error:", error);
+      }
     }
-
-    // Reset form fields
-    setEmail("");
-    setPassword("");
-    setName("");
-
-    // Log the login or signup action
-    if (isLogin) {
-      console.log("Logged in:", email);
-    } else {
-      console.log("Signed up:", email);
-    }
-
-    console.log(isLogin ? "Logging in" : "Signing up", {
-      email,
-      password,
-      name,
-    });
   };
 
   return (
