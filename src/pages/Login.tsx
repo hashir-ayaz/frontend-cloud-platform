@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { login, signup } from "../api/loginservice";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,6 +23,24 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically handle the login or signup logic
+    if (isLogin) {
+      login(email, password);
+    } else {
+      signup(name, email, password);
+    }
+
+    // Reset form fields
+    setEmail("");
+    setPassword("");
+    setName("");
+
+    // Log the login or signup action
+    if (isLogin) {
+      console.log("Logged in:", email);
+    } else {
+      console.log("Signed up:", email);
+    }
+
     console.log(isLogin ? "Logging in" : "Signing up", {
       email,
       password,
