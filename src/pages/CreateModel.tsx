@@ -15,7 +15,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getAvailableModels, deployModel } from "../service/containerService";
 import EnvironmentVariables from "../components/environmentVariables";
 
-// Main Create Model Page Component
 const CreateModelPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [availableModels, setAvailableModels] = useState<
@@ -68,7 +67,6 @@ const CreateModelPage: React.FC = () => {
 
       console.log("Deployment successful:", response);
 
-      // Reset form after successful deployment
       setContainerName("");
       setSelectedModel("");
       setEnvVars([]);
@@ -81,17 +79,17 @@ const CreateModelPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl p-6 mx-auto">
-      <h1 className="mb-6 text-2xl font-bold">Deploy Container</h1>
+      <h1 className="mb-6 text-2xl font-bold text-center">Deploy Container</h1>
 
       <Card>
         <CardContent className="pt-6">
           <div className="space-y-6">
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <Label htmlFor="containerName">Container Name</Label>
               <Input
                 id="containerName"
-                className="text-black"
-                placeholder="Enter container name"
+                className="w-full text-black"
+                placeholder="My-Yummy-Container!"
                 value={containerName}
                 onChange={(e) => setContainerName(e.target.value)}
               />

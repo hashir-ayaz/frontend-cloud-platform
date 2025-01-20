@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   return (
-    <DashboardLayout>
+    <>
       <div className="p-6 bg-white rounded-lg shadow">
         <h2 className="mb-4 text-xl font-semibold">
           Welcome to your Dashboard
@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
           widgets, charts, and other components here.
         </p>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

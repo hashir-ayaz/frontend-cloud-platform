@@ -20,10 +20,10 @@ const DashboardLayout: React.FC = () => {
     <div className="flex h-screen bg-gray-100">
       <Sidebar isOpen={sidebarOpen} closeSidebar={closeSidebar} />
 
-      <div className="flex overflow-hidden flex-col flex-1">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <header className="bg-white shadow-sm">
           <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <h1 className="text-2xl font-semibold text-gray-900">
                 Dashboard!
               </h1>
@@ -33,7 +33,7 @@ const DashboardLayout: React.FC = () => {
             </div>
           </div>
         </header>
-        <main className="overflow-y-auto overflow-x-hidden flex-1 bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
           <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <Outlet />
           </div>

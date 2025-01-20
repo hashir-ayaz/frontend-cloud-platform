@@ -47,7 +47,37 @@ export const deployModel = async (
   }
 };
 
+// Fetch container by ID
+export const getContainerById = async (containerId: string): Promise<any> => {
+  try {
+    const response = await containerApi.get(`/deploy/container/${containerId}`);
+    console.log("Fetched container details:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching container with ID ${containerId}:`, error);
+    throw error; // Rethrow the error for the caller to handle
+  }
+};
+
+// Fetch all containers for a specific user
+export const getContainersByUserId = async (userId: number): Promise<any[]> => {
+  try {
+    const response = await containerApi.get(
+      `/deploy/containers/user/${userId}`
+    );
+    console.log("Fetched containers for user:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching containers for user ID ${userId}:`, error);
+    throw error; // Rethrow the error for the caller to handle
+  }
+};
+
 // Example usage:
-// deployModel(1, { ENV_VAR: "value" }, "my-container")
+// getContainerById("1234-5678-9101")
+//   .then((data) => console.log(data))
+//   .catch((error) => console.error(error));
+
+// getContainersByUserId(1)
 //   .then((data) => console.log(data))
 //   .catch((error) => console.error(error));
