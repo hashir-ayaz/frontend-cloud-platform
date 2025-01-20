@@ -1,4 +1,4 @@
-import api from "./apiConfig";
+import authApi from "../api/authApiConfig.js";
 import { AxiosError } from "axios";
 import { useUserStore } from "../store/useUserStore.js"; // Import your Zustand store
 
@@ -25,7 +25,7 @@ export const login = async (
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await api.post<AuthResponse>("/auth/login", {
+    const response = await authApi.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
@@ -56,7 +56,7 @@ export const signup = async (
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await api.post<AuthResponse>("/auth/signup", {
+    const response = await authApi.post<AuthResponse>("/auth/signup", {
       name,
       email,
       password,

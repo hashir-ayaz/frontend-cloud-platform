@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { login, signup } from "../api/loginservice";
+import { login, signup } from "../service/loginservice";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Login() {

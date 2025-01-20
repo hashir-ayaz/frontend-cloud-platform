@@ -1,16 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle } from "lucide-react";
 import { APIKey } from "../types/apiKey";
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -18,9 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getAvailableModels } from "../service/containerService"; // Import the service function
 
 const CreateModelPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>("");
+  const [availableModels, setAvailableModels] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]); // To store available models from the backend
   const [apis, setApis] = useState<APIKey[]>([
     {
       id: "1",
@@ -38,6 +36,22 @@ const CreateModelPage: React.FC = () => {
     },
   ]);
 
+  useEffect(() => {
+    // Fetch available models when the component mounts
+    const fetchModels = async () => {
+      try {
+        const models = await getAvailableModels();
+        setAvailableModels(
+          models.map((model) => ({ id: model.id, name: model.name }))
+        );
+      } catch (error) {
+        console.error("Failed to fetch available models:", error);
+      }
+    };
+
+    fetchModels();
+  }, []);
+
   const handleDeploy = () => {
     if (selectedModel) {
       const newApi: APIKey = {
@@ -53,12 +67,11 @@ const CreateModelPage: React.FC = () => {
   };
 
   const handleGenerateAPI = () => {
-    // This would typically involve a backend call to generate a new API
     console.log("Generating new API...");
   };
 
   return (
-    <div className="p-6 mx-auto max-w-4xl">
+    <div className="max-w-4xl p-6 mx-auto">
       <h1 className="mb-6 text-2xl font-bold">Create Model</h1>
 
       <div className="flex flex-col gap-4 mb-6 sm:flex-row">
@@ -67,10 +80,15 @@ const CreateModelPage: React.FC = () => {
             <SelectValue placeholder="Select Model" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="gpt-3">GPT-3</SelectItem>
-            <SelectItem value="gpt-4">GPT-4</SelectItem>
-            <SelectItem value="bert">BERT</SelectItem>
-            <SelectItem value="t5">T5</SelectItem>
+            {availableModels.length > 0 ? (
+              availableModels.map((model) => (
+                <SelectItem key={model.id} value={model.name}>
+                  {model.name}
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem disabled>No models available</SelectItem>
+            )}
           </SelectContent>
         </Select>
         <Button onClick={handleDeploy} disabled={!selectedModel}>
@@ -78,44 +96,10 @@ const CreateModelPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="mb-6">
-        <h2 className="mb-2 text-xl font-semibold">Current Deployed Models</h2>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Model</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created At</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {apis.map((api) => (
-              <TableRow key={api.id}>
-                <TableCell>{api.name}</TableCell>
-                <TableCell>{api.model}</TableCell>
-                <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      api.status === "active"
-                        ? "bg-green-200 text-green-800"
-                        : "bg-red-200 text-red-800"
-                    }`}
-                  >
-                    {api.status}
-                  </span>
-                </TableCell>
-                <TableCell>{api.createdAt}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
       <Button
         onClick={handleGenerateAPI}
         variant="outline"
-        className="flex gap-2 items-center"
+        className="flex items-center gap-2"
       >
         <PlusCircle className="w-4 h-4" />
         Generate New API
