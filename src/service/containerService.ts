@@ -23,7 +23,31 @@ export const getAvailableModels = async (): Promise<Model[]> => {
   }
 };
 
+export const deployModel = async (
+  availableModelId: number,
+  environment: Record<string, string>,
+  name: string
+): Promise<{
+  containerId: string;
+  availableModelId: number;
+  environment: Record<string, string>;
+}> => {
+  try {
+    const response = await containerApi.post("/deploy/container", {
+      available_model_id: availableModelId,
+      environment,
+      name,
+    });
+
+    console.log("Model deployed successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error deploying model:", error);
+    throw error; // Rethrow the error for the caller to handle
+  }
+};
+
 // Example usage:
-// getAvailableModels()
-//   .then((models) => console.log(models))
+// deployModel(1, { ENV_VAR: "value" }, "my-container")
+//   .then((data) => console.log(data))
 //   .catch((error) => console.error(error));
