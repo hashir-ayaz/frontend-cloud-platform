@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { login, signup } from "../service/loginservice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,7 +22,6 @@ export default function Login() {
   const [name, setName] = useState("");
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +59,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -115,7 +114,7 @@ export default function Login() {
           </form>
         </CardContent>
         <CardFooter>
-          <p className="mt-2 w-full text-sm text-center text-gray-600">
+          <p className="w-full mt-2 text-sm text-center text-gray-600">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <Button
               variant="link"

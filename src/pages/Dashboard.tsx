@@ -1,6 +1,4 @@
 import React from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
-import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   return (

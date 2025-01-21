@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle } from "lucide-react";
-import { APIKey } from "../types/apiKey";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,7 +35,12 @@ const CreateModelPage: React.FC = () => {
     const fetchModels = async () => {
       try {
         const models = await getAvailableModels();
-        setAvailableModels(models);
+        // Ensure `description` is always a string
+        const normalizedModels = models.map((model) => ({
+          ...model,
+          description: model.description || "No description available",
+        }));
+        setAvailableModels(normalizedModels);
       } catch (error) {
         console.error("Failed to fetch available models:", error);
       }
