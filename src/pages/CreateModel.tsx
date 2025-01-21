@@ -66,12 +66,14 @@ const CreateModelPage: React.FC = () => {
       );
 
       console.log("Deployment successful:", response);
+      alert("Deployment successful!");
 
       setContainerName("");
       setSelectedModel("");
       setEnvVars([]);
     } catch (error) {
       console.error("Deployment failed:", error);
+      alert("Deployment failed!");
     } finally {
       setLoading(false);
     }
