@@ -25,10 +25,14 @@ export const login = async (
   password: string
 ): Promise<AuthResponse> => {
   try {
+    console.log(
+      `Sending Login request to ${authApi.defaults.baseURL}/auth/login`
+    );
     const response = await authApi.post<AuthResponse>("/auth/login", {
       email,
       password,
     });
+    console.log(`request sent to ${authApi.defaults.baseURL}/auth/login`);
 
     // Extract user details and update Zustand store
     const user = response.data.user;
