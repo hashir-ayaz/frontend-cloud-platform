@@ -44,7 +44,11 @@ export const login = async (
       // Update Zustand store with user details
       useUserStore.getState().setUser(user);
       console.log("User logged in:", user);
+    }else{
+      console.log("User not logged in:", user);
     }
+
+    console.log("Login response:", response.data);
 
     return response.data;
   } catch (error: unknown) {
