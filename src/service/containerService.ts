@@ -15,7 +15,10 @@ export interface Model {
 // Fetch all available models
 export const getAvailableModels = async (): Promise<Model[]> => {
   try {
-    console.log("VITE_CONTAINER_SERVICE_URL:", import.meta.env.VITE_CONTAINER_SERVICE_URL);
+    console.log(
+      "VITE_CONTAINER_SERVICE_URL:",
+      import.meta.env.VITE_CONTAINER_SERVICE_URL
+    );
     const response = await containerApi.get<Model[]>("/models/"); // Adjust the endpoint
     return response.data;
   } catch (error) {
@@ -27,17 +30,20 @@ export const getAvailableModels = async (): Promise<Model[]> => {
 export const deployModel = async (
   availableModelId: number,
   environment: Record<string, string>,
-  name: string
+  name: string,
+  ports: Array<{ port: number; protocol: "tcp" | "udp" }>
 ): Promise<{
   containerId: string;
   availableModelId: number;
   environment: Record<string, string>;
+  ports: Array<{ port: number; protocol: "tcp" | "udp" }>;
 }> => {
   try {
     const response = await containerApi.post("/deploy/container", {
       available_model_id: availableModelId,
       environment,
       name,
+      ports, // Include ports in the request payload
     });
 
     console.log("Model deployed successfully:", response.data);

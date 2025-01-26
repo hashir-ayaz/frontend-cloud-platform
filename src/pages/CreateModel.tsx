@@ -30,7 +30,10 @@ const CreateModelPage: React.FC = () => {
   const [envVars, setEnvVars] = useState<Array<{ key: string; value: string }>>(
     []
   );
-  const [ports, setPorts] = useState<Array<number>>([]);
+  const [ports, setPorts] = useState<
+    Array<{ port: number; protocol: "tcp" | "udp" }>
+  >([]);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -65,10 +68,13 @@ const CreateModelPage: React.FC = () => {
         envVars.filter((v) => v.key && v.value).map((v) => [v.key, v.value])
       );
 
+      const portsConfig = ports.filter((p) => p.port > 0); // Only include valid ports
+
       const response = await deployModel(
         parseInt(selectedModel),
         environment,
-        containerName
+        containerName,
+        portsConfig // Pass ports configuration here
       );
 
       console.log("Deployment successful:", response);
@@ -77,6 +83,7 @@ const CreateModelPage: React.FC = () => {
       setContainerName("");
       setSelectedModel("");
       setEnvVars([]);
+      setPorts([]);
     } catch (error) {
       console.error("Deployment failed:", error);
       alert("Deployment failed!");
