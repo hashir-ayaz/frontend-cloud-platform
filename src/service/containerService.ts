@@ -15,6 +15,7 @@ export interface Model {
 // Fetch all available models
 export const getAvailableModels = async (): Promise<Model[]> => {
   try {
+    console.log("VITE_CONTAINER_SERVICE_URL:", import.meta.env.VITE_CONTAINER_SERVICE_URL);
     const response = await containerApi.get<Model[]>("/models/"); // Adjust the endpoint
     return response.data;
   } catch (error) {

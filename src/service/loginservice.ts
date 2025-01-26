@@ -19,7 +19,6 @@ interface ErrorResponse {
   error: string;
 }
 
-// Login function
 export const login = async (
   email: string,
   password: string
@@ -34,14 +33,24 @@ export const login = async (
     });
     console.log(`request sent to ${authApi.defaults.baseURL}/auth/login`);
 
-    // Extract user details and update Zustand store
-    const user = response.data.user;
-    if (user) {
+    // Extract user details and token from the response
+    const { user, token } = response.data;
+
+    if (user && token) {
+      // Store the token in localStorage
+      localStorage.setItem("jwt", token);
+      console.log("JWT stored in localStorage:", token);
+
+      // Update Zustand store with user details
       useUserStore.getState().setUser(user);
       console.log("User logged in:", user);
+    }else{
+      console.log("User not logged in:", user);
     }
 
-    return response.data; // The backend already sets the JWT in cookies
+    console.log("Login response:", response.data);
+
+    return response.data;
   } catch (error: unknown) {
     if (isAxiosError<ErrorResponse>(error)) {
       console.error("Error:", error.response?.data.error || "Unknown error");
@@ -66,14 +75,20 @@ export const signup = async (
       password,
     });
 
-    // Extract user details and update Zustand store
-    const user = response.data.user;
-    if (user) {
+    // Extract user details and token from the response
+    const { user, token } = response.data;
+
+    if (user && token) {
+      // Store the token in localStorage
+      localStorage.setItem("jwt", token);
+      console.log("JWT stored in localStorage:", token);
+
+      // Update Zustand store with user details
       useUserStore.getState().setUser(user);
       console.log("User signed up:", user);
     }
 
-    return response.data; // The backend already sets the JWT in cookies
+    return response.data;
   } catch (error: unknown) {
     if (isAxiosError<ErrorResponse>(error)) {
       console.error("Error:", error.response?.data.error || "Unknown error");
