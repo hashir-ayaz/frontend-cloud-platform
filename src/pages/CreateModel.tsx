@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { getAvailableModels, deployModel } from "../service/containerService";
 import EnvironmentVariables from "../components/environmentVariables";
+import ContainerPorts from "@/components/ContainerPorts";
 
 const CreateModelPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>("");
@@ -29,6 +30,7 @@ const CreateModelPage: React.FC = () => {
   const [envVars, setEnvVars] = useState<Array<{ key: string; value: string }>>(
     []
   );
+  const [ports, setPorts] = useState<Array<number>>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -130,6 +132,7 @@ const CreateModelPage: React.FC = () => {
       </Card>
 
       <EnvironmentVariables envVars={envVars} setEnvVars={setEnvVars} />
+      <ContainerPorts ports={ports} setPorts={setPorts} />
 
       <div className="flex justify-end mt-6">
         <Button
