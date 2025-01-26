@@ -9,21 +9,29 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { getContainersByUserId } from "../service/containerService"; // Import the service function
+import { useUserStore } from "@/store/useUserStore";
+interface PortMapping {
+  host_port: number;
+  container_port: number;
+  protocol: string;
+}
 
 interface Container {
   id: string;
   user_id: number;
   available_model_id: number;
+  name: string; // Container name
   status: string;
+  ports: PortMapping[]; // Mapped ports
   config: Record<string, any>;
   created_at: string;
-  model_name?: string; // Optional for displaying the model name
+  model_name: string; // Available model name
 }
 
 const DeployedModels: React.FC = () => {
   const [containers, setContainers] = useState<Container[]>([]);
   const [loading, setLoading] = useState(false);
-  const userId = 1; // Replace with dynamic user ID as needed
+  const userId = useUserStore((state) => state.currentUser?.id); // Get the current user ID from the store
 
   useEffect(() => {
     const fetchContainers = async () => {
@@ -53,9 +61,11 @@ const DeployedModels: React.FC = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Container Name</TableHead>
               <TableHead>Container ID</TableHead>
               <TableHead>Model Name</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Mapped Ports</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -63,8 +73,10 @@ const DeployedModels: React.FC = () => {
           <TableBody>
             {containers.map((container) => (
               <TableRow key={container.id}>
+                <TableCell>{container.name || "Unnamed"}</TableCell>
                 <TableCell>{container.id}</TableCell>
-                <TableCell>{container.model_name || "Unknown"}</TableCell>
+                <TableCell>{container.model_name || "Unknown"}</TableCell>{" "}
+                {/* Model Name */}
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
@@ -77,6 +89,20 @@ const DeployedModels: React.FC = () => {
                   >
                     {container.status}
                   </span>
+                </TableCell>
+                <TableCell>
+                  {container.ports?.length > 0 ? (
+                    <ul>
+                      {container.ports.map((port, index) => (
+                        <li key={index}>
+                          {port.host_port} ➝ {port.container_port} (
+                          {port.protocol})
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span>No ports mapped</span>
+                  )}
                 </TableCell>
                 <TableCell>
                   {new Date(container.created_at).toLocaleString()}
