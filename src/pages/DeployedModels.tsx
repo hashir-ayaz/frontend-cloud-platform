@@ -23,7 +23,7 @@ interface Container {
   name: string; // Container name
   status: string;
   ports: PortMapping[]; // Mapped ports
-  config: Record<string, any>;
+  config: Record<string, number>;
   created_at: string;
   model_name: string; // Available model name
 }
@@ -50,7 +50,7 @@ const DeployedModels: React.FC = () => {
   }, [userId]);
 
   return (
-    <div className="max-w-4xl p-6 mx-auto">
+    <div className="p-6 mx-auto max-w-4xl">
       <h1 className="mb-6 text-2xl font-bold">Deployed Containers</h1>
 
       {loading ? (

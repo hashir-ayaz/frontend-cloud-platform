@@ -1,19 +1,23 @@
-# Use Node.js 18 for the frontend
+# Use Node.js 18 for the build and serve step
 FROM node:18-alpine
 
-# Set the working directory for the frontend
+# Set the working directory
 WORKDIR /app
 
-# Copy frontend files
+# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
-# Install dependencies and build the frontend
+# Install dependencies
 RUN npm install
+
+# Copy all files to the container
 COPY . .
+
+# Build the frontend for production
 RUN npm run build
 
-# Expose the frontend port
-EXPOSE 5173
+# Expose the Vite preview server port
+EXPOSE 4173
 
-# Start the frontend development server
-CMD ["npm", "run", "dev"]
+# Use Vite's preview command to serve the built app
+CMD ["npm", "run", "preview"]

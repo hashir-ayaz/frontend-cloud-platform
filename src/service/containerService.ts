@@ -67,7 +67,9 @@ export const getContainerById = async (containerId: string): Promise<any> => {
 };
 
 // Fetch all containers for a specific user
-export const getContainersByUserId = async (userId: number): Promise<any[]> => {
+export const getContainersByUserId = async (
+  userId: string | undefined
+): Promise<any[]> => {
   try {
     const response = await containerApi.get(
       `/deploy/containers/user/${userId}`
