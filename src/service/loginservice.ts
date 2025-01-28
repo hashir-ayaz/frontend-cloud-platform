@@ -27,7 +27,7 @@ export const login = async (
     console.log(
       `Sending Login request to ${authApi.defaults.baseURL}/auth/login`
     );
-    const response = await authApi.post<AuthResponse>("/auth/login", {
+    const response = await authApi.post<AuthResponse>("/login", {
       email,
       password,
     });
@@ -64,13 +64,13 @@ export const login = async (
 
 // Signup function
 export const signup = async (
-  name: string,
+  username: string,
   email: string,
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await authApi.post<AuthResponse>("/auth/signup", {
-      name,
+    const response = await authApi.post<AuthResponse>("/signup", {
+      username,
       email,
       password,
     });
