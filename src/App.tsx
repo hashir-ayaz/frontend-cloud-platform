@@ -15,8 +15,8 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="create-model" element={<CreateModelPage />} />
         <Route path="deployed-models" element={<DeployedModels />} />
-      </Route>
         <Route path="/containers/:containerId" element={<ContainerDetailView />} />
+      </Route>
     </Routes>
   );
 }

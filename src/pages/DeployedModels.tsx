@@ -62,7 +62,7 @@ const DeployedModels: React.FC = () => {
             {containers.map((container) => (
               <TableRow
                 key={container.id}
-                onClick={() => navigate(`/containers/${container.id}`)}
+                onClick={() => navigate(`/dashboard/containers/${container.id}`)}
                 className="transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100"
               >
                 <TableCell>{container.name || "Unnamed"}</TableCell>

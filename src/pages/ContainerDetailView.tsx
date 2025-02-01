@@ -1,40 +1,58 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Trash2, StopCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getContainerById } from "@/service/containerService";
+import { getContainerById, stopContainerById, deleteContainerById } from "@/service/containerService";
 import { ContainerDetails } from "@/types/types";
 
-const API_BASE_URL = "https://hashirayaz.site/api/deploy";
+// Default container structure with required properties
+const defaultContainer: ContainerDetails = {
+  id: "",
+  user_id: 0, // Added user_id
+  name: "Unknown",
+  available_model_id: 0, // Added available_model_id
+  status: "stopped",
+  model_name: "N/A",
+  model_description: "No description available.",
+  docker_image: "N/A",
+  ports: [],
+  config: {
+    environment: {},
+  },
+  created_at: new Date().toISOString(), // Added created_at
+};
 
 const ContainerDetailView = () => {
   const { containerId } = useParams<{ containerId: string }>();
-  const [container, setContainer] = useState<ContainerDetails | null>();
+  const [container, setContainer] = useState<ContainerDetails>(defaultContainer);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchContainerDetails();
+    if (containerId) {
+      fetchContainerDetails();
+    }
   }, [containerId]);
 
   const fetchContainerDetails = async () => {
     setLoading(true);
     if (!containerId) {
       alert("Container ID not found");
+      setLoading(false);
       return;
     }
     try {
       const res = await getContainerById(containerId);
-      setContainer(res);
+      setContainer(res || defaultContainer);
     } catch {
       toast({
         title: "Failed to fetch container details",
         variant: "destructive",
       });
+      setContainer(defaultContainer);
     } finally {
       setLoading(false);
     }
@@ -43,7 +61,7 @@ const ContainerDetailView = () => {
   const stopContainer = async () => {
     setLoading(true);
     try {
-      await axios.post(`${API_BASE_URL}/container/${containerId}/stop`);
+      await stopContainerById(containerId ?? ""); // Ensure a string is passed
       toast({ title: "Container stopped successfully!", variant: "default" });
       fetchContainerDetails();
     } catch {
@@ -56,9 +74,9 @@ const ContainerDetailView = () => {
   const deleteContainer = async () => {
     setLoading(true);
     try {
-      await axios.delete(`${API_BASE_URL}/container/${containerId}`);
+      await deleteContainerById(containerId ?? ""); // Ensure a string is passed
       toast({ title: "Container deleted successfully!", variant: "default" });
-      setContainer(null);
+      setContainer(defaultContainer);
     } catch {
       toast({ title: "Failed to delete container", variant: "destructive" });
     } finally {
@@ -66,7 +84,7 @@ const ContainerDetailView = () => {
     }
   };
 
-  if (loading || !container) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-6 h-6 text-white animate-spin" />
@@ -78,7 +96,7 @@ const ContainerDetailView = () => {
     <Card className="mt-6">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-white">
-          Container Details - {container.name}
+          Container Details - {container?.name || "Unknown"}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -87,40 +105,29 @@ const ContainerDetailView = () => {
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-white">Status:</p>
             <Badge
-              variant={
-                container.status === "running" ? "default" : "destructive"
-              }
+              variant={container?.status === "running" ? "default" : "destructive"}
               className="capitalize"
             >
-              {container.status}
+              {container?.status || "Unknown"}
             </Badge>
           </div>
 
           {/* Model Info */}
           <div className="p-4 bg-gray-800 border rounded-md">
-            <p className="font-semibold text-white text-md">
-              Model Information
-            </p>
-            <p className="text-sm text-gray-400">
-              Name: {container.model_name}
-            </p>
-            <p className="text-sm text-gray-400">
-              Description: {container.model_description}
-            </p>
-            <p className="text-sm text-gray-400">
-              Docker Image: {container.docker_image}
-            </p>
+            <p className="font-semibold text-white text-md">Model Information</p>
+            <p className="text-sm text-gray-400">Name: {container?.model_name || "N/A"}</p>
+            <p className="text-sm text-gray-400">Description: {container?.model_description || "No description available."}</p>
+            <p className="text-sm text-gray-400">Docker Image: {container?.docker_image || "N/A"}</p>
           </div>
 
           {/* Assigned Ports */}
           <div className="p-4 bg-gray-800 border rounded-md">
             <p className="font-semibold text-white text-md">Assigned Ports</p>
-            {container.ports.length > 0 ? (
+            {container?.ports?.length > 0 ? (
               <ul className="text-sm text-gray-400">
                 {container.ports.map((port, index) => (
                   <li key={index}>
-                    Host: {port.host_port} → Container: {port.container_port} (
-                    {port.protocol})
+                    Host: {port.host_port} → Container: {port.container_port} ({port.protocol})
                   </li>
                 ))}
               </ul>
@@ -131,35 +138,25 @@ const ContainerDetailView = () => {
 
           {/* Environment Variables */}
           <div className="p-4 bg-gray-800 border rounded-md">
-            <p className="font-semibold text-white text-md">
-              Environment Variables
-            </p>
-            {Object.keys(container.config.environment || {}).length > 0 ? (
+            <p className="font-semibold text-white text-md">Environment Variables</p>
+            {container?.config?.environment &&
+            Object.keys(container.config.environment).length > 0 ? (
               <ul className="text-sm text-gray-400">
-                {Object.entries(container.config.environment).map(
-                  ([key, value]) => (
-                    <li key={key}>
-                      {key}: <span className="text-gray-300">{value}</span>
-                    </li>
-                  )
-                )}
+                {Object.entries(container.config.environment).map(([key, value]) => (
+                  <li key={key}>
+                    {key}: <span className="text-gray-300">{value}</span>
+                  </li>
+                ))}
               </ul>
             ) : (
-              <p className="text-sm text-gray-400">
-                No environment variables set.
-              </p>
+              <p className="text-sm text-gray-400">No environment variables set.</p>
             )}
           </div>
 
           {/* Actions */}
           <div className="flex justify-end space-x-2">
-            {container.status === "running" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={stopContainer}
-                className="text-black"
-              >
+            {container?.status === "running" && (
+              <Button variant="outline" size="sm" onClick={stopContainer} className="text-black">
                 <StopCircle className="w-4 h-4 mr-2" />
                 Stop
               </Button>

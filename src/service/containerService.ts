@@ -12,10 +12,11 @@ export const getAvailableModels = async (): Promise<Model[]> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching available models:", error);
-    throw error; // Rethrow the error for the caller to handle
+    throw error;
   }
 };
 
+// Deploy a new container model
 export const deployModel = async (
   availableModelId: number,
   environment: Record<string, string>,
@@ -32,14 +33,14 @@ export const deployModel = async (
       available_model_id: availableModelId,
       environment,
       name,
-      ports, // Include ports in the request payload
+      ports,
     });
 
     console.log("Model deployed successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error deploying model:", error);
-    throw error; // Rethrow the error for the caller to handle
+    throw error;
   }
 };
 
@@ -53,7 +54,7 @@ export const getContainerById = async (
     return response.data;
   } catch (error) {
     console.error(`Error fetching container with ID ${containerId}:`, error);
-    throw error; // Rethrow the error for the caller to handle
+    throw error;
   }
 };
 
@@ -69,15 +70,39 @@ export const getContainersByUserId = async (
     return response.data;
   } catch (error) {
     console.error(`Error fetching containers for user ID ${userId}:`, error);
-    throw error; // Rethrow the error for the caller to handle
+    throw error;
   }
 };
 
-// Example usage:
-// getContainerById("1234-5678-9101")
-//   .then((data) => console.log(data))
-//   .catch((error) => console.error(error));
+// Stop a container by ID
+export const stopContainerById = async (containerId: string): Promise<void> => {
+  try {
+    await containerApi.post(`/deploy/container/${containerId}/stop`);
+    console.log(`Container ${containerId} stopped successfully.`);
+  } catch (error) {
+    console.error(`Error stopping container with ID ${containerId}:`, error);
+    throw error;
+  }
+};
 
-// getContainersByUserId(1)
-//   .then((data) => console.log(data))
-//   .catch((error) => console.error(error));
+// Delete a container by ID
+export const deleteContainerById = async (containerId: string): Promise<void> => {
+  try {
+    await containerApi.delete(`/deploy/container/${containerId}`);
+    console.log(`Container ${containerId} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting container with ID ${containerId}:`, error);
+    throw error;
+  }
+};
+
+// Start a container by ID
+export const startContainerById = async (containerId: string): Promise<void> => {
+  try {
+    await containerApi.post(`/deploy/container/${containerId}/start`);
+    console.log(`Container ${containerId} started successfully.`);
+  } catch (error) {
+    console.error(`Error starting container with ID ${containerId}:`, error);
+    throw error;
+  }
+};
