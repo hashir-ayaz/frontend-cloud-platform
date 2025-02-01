@@ -4,6 +4,8 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import CreateModelPage from "./pages/CreateModel";
 import DeployedModels from "./pages/DeployedModels";
 import Dashboard from "./pages/Dashboard";
+import ContainerDetailView from "./pages/ContainerDetailView";
+
 export default function App() {
   return (
     <Routes>
@@ -13,6 +15,7 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="create-model" element={<CreateModelPage />} />
         <Route path="deployed-models" element={<DeployedModels />} />
+        <Route path="/containers/:containerId" element={<ContainerDetailView />} />
       </Route>
     </Routes>
   );
