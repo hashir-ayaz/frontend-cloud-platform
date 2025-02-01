@@ -25,13 +25,13 @@ export const login = async (
 ): Promise<AuthResponse> => {
   try {
     console.log(
-      `Sending Login request to ${authApi.defaults.baseURL}/auth/login`
+      `Sending Login request to ${authApi.defaults.baseURL}/login`
     );
     const response = await authApi.post<AuthResponse>("/login", {
       email,
       password,
     });
-    console.log(`request sent to ${authApi.defaults.baseURL}/auth/login`);
+    console.log(`request sent to ${authApi.defaults.baseURL}/login`);
 
     // Extract user details and token from the response
     const { user, token } = response.data;
