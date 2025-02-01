@@ -9,18 +9,21 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { PortMapping } from "@/types/types"; // Import the PortMapping interface
 
-// Ports Management Component
+interface Port {
+  port: number;
+  protocol: "tcp" | "udp";
+}
+
 const ContainerPorts = ({
   ports,
   setPorts,
 }: {
-  ports: Array<PortMapping>; // Use PortMapping interface here
-  setPorts: (ports: Array<PortMapping>) => void; // Use PortMapping interface here
+  ports: Port[];
+  setPorts: (ports: Port[]) => void;
 }) => {
   const addPort = () => {
-    setPorts([...ports, { host_port: 0, protocol: "tcp" }]); // Add a default port with TCP
+    setPorts([...ports, { port: 0, protocol: "tcp" }]); // Default new port entry
   };
 
   const removePort = (index: number) => {
@@ -29,23 +32,17 @@ const ContainerPorts = ({
 
   const updatePort = (index: number, value: string) => {
     const portNumber = parseInt(value, 10);
-
     if (!isNaN(portNumber) && portNumber >= 1 && portNumber <= 65535) {
       const newPorts = [...ports];
-      newPorts[index].host_port = portNumber;
-      setPorts(newPorts);
-    } else if (value === "") {
-      // Allow clearing the input
-      const newPorts = [...ports];
-      newPorts[index].host_port = 0;
+      newPorts[index].port = portNumber;
       setPorts(newPorts);
     }
   };
 
   const updateProtocol = (index: number, protocol: "tcp" | "udp") => {
-    const newPorts = [...ports];
-    newPorts[index].protocol = protocol;
-    setPorts(newPorts);
+    const newPorts = [...ports]; // Create a copy of the current ports
+    newPorts[index].protocol = protocol; // Update the protocol for the specific port
+    setPorts(newPorts); // Set the new ports array
   };
 
   return (
@@ -70,7 +67,7 @@ const ContainerPorts = ({
               <div className="flex-1">
                 <Input
                   placeholder="Port (1-65535)"
-                  value={entry.host_port === 0 ? "" : entry.host_port.toString()}
+                  value={entry.port === 0 ? "" : entry.port.toString()}
                   onChange={(e) => updatePort(index, e.target.value)}
                   className="w-full text-black"
                   type="number"
