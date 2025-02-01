@@ -9,17 +9,18 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
+import { PortMapping } from "@/types/types"; // Import the PortMapping interface
 
 // Ports Management Component
 const ContainerPorts = ({
   ports,
   setPorts,
 }: {
-  ports: Array<{ port: number; protocol: "tcp" | "udp" }>;
-  setPorts: (ports: Array<{ port: number; protocol: "tcp" | "udp" }>) => void;
+  ports: Array<PortMapping>; // Use PortMapping interface here
+  setPorts: (ports: Array<PortMapping>) => void; // Use PortMapping interface here
 }) => {
   const addPort = () => {
-    setPorts([...ports, { port: 0, protocol: "tcp" }]); // Add a default port with TCP
+    setPorts([...ports, { host_port: 0, protocol: "tcp" }]); // Add a default port with TCP
   };
 
   const removePort = (index: number) => {
@@ -31,12 +32,12 @@ const ContainerPorts = ({
 
     if (!isNaN(portNumber) && portNumber >= 1 && portNumber <= 65535) {
       const newPorts = [...ports];
-      newPorts[index].port = portNumber;
+      newPorts[index].host_port = portNumber;
       setPorts(newPorts);
     } else if (value === "") {
       // Allow clearing the input
       const newPorts = [...ports];
-      newPorts[index].port = 0;
+      newPorts[index].host_port = 0;
       setPorts(newPorts);
     }
   };
@@ -69,7 +70,7 @@ const ContainerPorts = ({
               <div className="flex-1">
                 <Input
                   placeholder="Port (1-65535)"
-                  value={entry.port === 0 ? "" : entry.port.toString()}
+                  value={entry.host_port === 0 ? "" : entry.host_port.toString()}
                   onChange={(e) => updatePort(index, e.target.value)}
                   className="w-full text-black"
                   type="number"

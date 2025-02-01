@@ -32,9 +32,8 @@ export interface Model {
   updated_at?: string;
 }
 
-interface PortMapping {
+export interface PortMapping {
   host_port: number;
-  container_port: number;
   protocol: string;
 }
 
