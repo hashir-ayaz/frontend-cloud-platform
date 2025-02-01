@@ -6,26 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Trash2, StopCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getContainerById } from "@/service/containerService";
+import { ContainerDetails } from "@/types/types";
 
 const API_BASE_URL = "https://hashirayaz.site/api/deploy";
 
-interface ContainerDetails {
-  id: string;
-  user_id: number;
-  name: string;
-  available_model_id: number;
-  model_name: string;
-  model_description: string;
-  docker_image: string;
-  status: "running" | "stopped" | "failed" | "pending";
-  ports: { host_port: number; container_port: number; protocol: string }[];
-  config: { environment: Record<string, string> };
-  created_at: string;
-}
-
 const ContainerDetailView = () => {
-  const { containerId } = useParams();
-  const [container, setContainer] = useState<ContainerDetails | null>(null);
+  const { containerId } = useParams<{ containerId: string }>();
+  const [container, setContainer] = useState<ContainerDetails | null>();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -35,9 +23,13 @@ const ContainerDetailView = () => {
 
   const fetchContainerDetails = async () => {
     setLoading(true);
+    if (!containerId) {
+      alert("Container ID not found");
+      return;
+    }
     try {
-      const res = await axios.get(`${API_BASE_URL}/container/${containerId}`);
-      setContainer(res.data);
+      const res = await getContainerById(containerId);
+      setContainer(res);
     } catch {
       toast({
         title: "Failed to fetch container details",

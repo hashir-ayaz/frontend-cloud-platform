@@ -14,18 +14,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getAvailableModels, deployModel } from "../service/containerService";
 import EnvironmentVariables from "../components/environmentVariables";
 import ContainerPorts from "@/components/ContainerPorts";
+import { Model } from "../types/types";
 
 const CreateModelPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [availableModels, setAvailableModels] = useState<
-    Array<{
-      id: number;
-      name: string;
-      description: string;
-      docker_image: string;
-      version: string;
-    }>
-  >([]);
+  const [availableModels, setAvailableModels] = useState<Array<Model>>([]);
   const [containerName, setContainerName] = useState("");
   const [envVars, setEnvVars] = useState<Array<{ key: string; value: string }>>(
     []

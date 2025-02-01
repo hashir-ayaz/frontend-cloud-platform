@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -9,35 +9,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { getContainersByUserId } from "../service/containerService"; // Import service function
+import { getContainersByUserId } from "../service/containerService";
 import { useUserStore } from "@/store/useUserStore";
-
-interface PortMapping {
-  host_port: number;
-  container_port: number;
-  protocol: string;
-}
-
-interface Container {
-  id: string;
-  user_id: number;
-  available_model_id: number;
-  name: string;
-  status: string;
-  ports: PortMapping[];
-  config: Record<string, number>;
-  created_at: string;
-  model_name: string;
-}
+import { ContainerDetails } from "@/types/types"; // Import the new interface
 
 const DeployedModels: React.FC = () => {
-  const [containers, setContainers] = useState<Container[]>([]);
+  const [containers, setContainers] = useState<ContainerDetails[]>([]);
   const [loading, setLoading] = useState(false);
   const userId = useUserStore((state) => state.currentUser?.id);
-  const navigate = useNavigate(); // ✅ React Router navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchContainers = async () => {
+      if (!userId) return; // Exit early if userId is undefined
+
       setLoading(true);
       try {
         const data = await getContainersByUserId(userId);
@@ -53,7 +38,7 @@ const DeployedModels: React.FC = () => {
   }, [userId]);
 
   return (
-    <div className="p-6 mx-auto max-w-4xl">
+    <div className="max-w-4xl p-6 mx-auto">
       <h1 className="mb-6 text-2xl font-bold">Deployed Containers</h1>
 
       {loading ? (
@@ -77,8 +62,8 @@ const DeployedModels: React.FC = () => {
             {containers.map((container) => (
               <TableRow
                 key={container.id}
-                onClick={() => navigate(`/containers/${container.id}`)} // ✅ Navigate on row click
-                className="cursor-pointer hover:bg-gray-100 transition duration-150 ease-in-out"
+                onClick={() => navigate(`/containers/${container.id}`)}
+                className="transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100"
               >
                 <TableCell>{container.name || "Unnamed"}</TableCell>
                 <TableCell>{container.id}</TableCell>
@@ -110,7 +95,9 @@ const DeployedModels: React.FC = () => {
                     <span>No ports mapped</span>
                   )}
                 </TableCell>
-                <TableCell>{new Date(container.created_at).toLocaleString()}</TableCell>
+                <TableCell>
+                  {new Date(container.created_at).toLocaleString()}
+                </TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm">
                     View Logs

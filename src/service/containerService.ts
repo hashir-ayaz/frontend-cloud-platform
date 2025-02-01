@@ -1,16 +1,5 @@
 import containerApi from "../api/containerApiConfig";
-
-// Define the type for a model
-export interface Model {
-  id: number;
-  name: string;
-  description?: string;
-  docker_image: string;
-  version: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import { Model, ContainerDetails } from "../types/types";
 
 // Fetch all available models
 export const getAvailableModels = async (): Promise<Model[]> => {
@@ -55,7 +44,9 @@ export const deployModel = async (
 };
 
 // Fetch container by ID
-export const getContainerById = async (containerId: string): Promise<any> => {
+export const getContainerById = async (
+  containerId: string
+): Promise<ContainerDetails | null> => {
   try {
     const response = await containerApi.get(`/deploy/container/${containerId}`);
     console.log("Fetched container details:", response.data);

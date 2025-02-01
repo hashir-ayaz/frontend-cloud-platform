@@ -2,14 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { EnvVar } from "@/types/types"; // Import the EnvVar type
 
 // Environment Variables Component
 const EnvironmentVariables = ({
   envVars,
   setEnvVars,
 }: {
-  envVars: Array<{ key: string; value: string }>;
-  setEnvVars: (vars: Array<{ key: string; value: string }>) => void;
+  envVars: Array<EnvVar>; // Use EnvVar type here
+  setEnvVars: (vars: Array<EnvVar>) => void; // Use EnvVar type here
 }) => {
   const addEnvVar = () => {
     setEnvVars([...envVars, { key: "", value: "" }]);
@@ -19,11 +20,7 @@ const EnvironmentVariables = ({
     setEnvVars(envVars.filter((_, i) => i !== index));
   };
 
-  const updateEnvVar = (
-    index: number,
-    field: "key" | "value",
-    value: string
-  ) => {
+  const updateEnvVar = (index: number, field: keyof EnvVar, value: string) => {
     const newEnvVars = [...envVars];
     newEnvVars[index][field] = value;
     setEnvVars(newEnvVars);

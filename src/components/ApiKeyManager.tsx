@@ -12,14 +12,9 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { ApiKey } from "@/types/types";
 
 const API_BASE_URL = "https://hashirayaz.site/api/api-keys";
-
-interface ApiKey {
-  id: string;
-  key: string;
-  container_id: string;
-}
 
 const ApiKeyManager = () => {
   const [containers, setContainers] = useState<
