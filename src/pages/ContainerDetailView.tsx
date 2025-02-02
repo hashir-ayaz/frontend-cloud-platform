@@ -10,24 +10,28 @@ import {
   stopContainerById,
   deleteContainerById,
 } from "@/service/containerService";
-import { ContainerDetails } from "@/types/types";
+import {
+  createApiKey,
+  deleteApiKey,
+  getApiKeysByContainer,
+} from "@/service/apiKeyService";
+import { ContainerDetails, ApiKey } from "@/types/types";
 import ApiKeyManager from "@/components/ApiKeyManager";
 
-// Default container structure with required properties
+// Default container structure
 const defaultContainer: ContainerDetails = {
   id: "",
-  user_id: 0, // Added user_id
+  user_id: 0,
   name: "Unknown",
-  available_model_id: 0, // Added available_model_id
+  available_model_id: 0,
   status: "stopped",
   model_name: "N/A",
   model_description: "No description available.",
   docker_image: "N/A",
   ports: [],
-  config: {
-    environment: {},
-  },
-  created_at: new Date().toISOString(), // Added created_at
+  config: { environment: {} },
+  created_at: new Date().toISOString(),
+  api_keys: [],
 };
 
 const ContainerDetailView = () => {
@@ -45,14 +49,13 @@ const ContainerDetailView = () => {
 
   const fetchContainerDetails = async () => {
     setLoading(true);
-    if (!containerId) {
-      alert("Container ID not found");
-      setLoading(false);
-      return;
-    }
     try {
-      const res = await getContainerById(containerId);
-      setContainer(res || defaultContainer);
+      const res = await getContainerById(containerId ?? "");
+      const apiKeys = await getApiKeysByContainer(containerId ?? "");
+      setContainer({
+        ...(res || defaultContainer),
+        api_keys: apiKeys.api_keys,
+      });
     } catch {
       toast({
         title: "Failed to fetch container details",
@@ -67,7 +70,7 @@ const ContainerDetailView = () => {
   const stopContainer = async () => {
     setLoading(true);
     try {
-      await stopContainerById(containerId ?? ""); // Ensure a string is passed
+      await stopContainerById(containerId ?? "");
       toast({ title: "Container stopped successfully!", variant: "default" });
       fetchContainerDetails();
     } catch {
@@ -80,11 +83,43 @@ const ContainerDetailView = () => {
   const deleteContainer = async () => {
     setLoading(true);
     try {
-      await deleteContainerById(containerId ?? ""); // Ensure a string is passed
+      await deleteContainerById(containerId ?? "");
       toast({ title: "Container deleted successfully!", variant: "default" });
       setContainer(defaultContainer);
     } catch {
       toast({ title: "Failed to delete container", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Generate API Key
+  const generateApiKeyHandler = async () => {
+    setLoading(true);
+    try {
+      const newKey = await createApiKey(containerId ?? "");
+      toast({
+        title: "API Key Created",
+        description: `Key: ${newKey.api_key}`,
+        variant: "default",
+      });
+      fetchContainerDetails();
+    } catch {
+      toast({ title: "Failed to create API key", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete API Key
+  const deleteApiKeyHandler = async (apiKeyId: string) => {
+    setLoading(true);
+    try {
+      await deleteApiKey(apiKeyId);
+      toast({ title: "API Key deleted successfully!", variant: "default" });
+      fetchContainerDetails();
+    } catch {
+      toast({ title: "Failed to delete API key", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -177,8 +212,15 @@ const ContainerDetailView = () => {
             )}
           </div>
 
+          {/* API Keys Section */}
           <div>
-            <ApiKeyManager />
+            <ApiKeyManager
+              apiKeys={container.api_keys ?? []}
+              containerId={container.id}
+              onGenerateApiKey={generateApiKeyHandler}
+              onDeleteApiKey={deleteApiKeyHandler}
+              loading={loading}
+            />
           </div>
 
           {/* Actions */}

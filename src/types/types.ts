@@ -19,6 +19,7 @@ export interface ContainerDetails {
   ports: { host_port: number; container_port: number; protocol: string }[];
   config: { environment: Record<string, string> };
   created_at: string;
+  api_keys?: ApiKey[];
 }
 
 export interface Model {
