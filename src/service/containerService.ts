@@ -37,7 +37,17 @@ export const deployModel = async (
     });
 
     console.log("Model deployed successfully:", response.data);
-    return response.data;
+
+    // ✅ Mapping the API response to the expected return format
+    return {
+      containerId: response.data.container_id,
+      availableModelId: response.data.available_model_id,
+      environment: response.data.environment,
+      ports: response.data.ports.map((port: any) => ({
+        port: port.container_port,
+        protocol: port.protocol,
+      })),
+    };
   } catch (error) {
     console.error("Error deploying model:", error);
     throw error;
@@ -86,7 +96,9 @@ export const stopContainerById = async (containerId: string): Promise<void> => {
 };
 
 // Delete a container by ID
-export const deleteContainerById = async (containerId: string): Promise<void> => {
+export const deleteContainerById = async (
+  containerId: string
+): Promise<void> => {
   try {
     await containerApi.delete(`/deploy/container/${containerId}`);
     console.log(`Container ${containerId} deleted successfully.`);
@@ -97,7 +109,9 @@ export const deleteContainerById = async (containerId: string): Promise<void> =>
 };
 
 // Start a container by ID
-export const startContainerById = async (containerId: string): Promise<void> => {
+export const startContainerById = async (
+  containerId: string
+): Promise<void> => {
   try {
     await containerApi.post(`/deploy/container/${containerId}/start`);
     console.log(`Container ${containerId} started successfully.`);

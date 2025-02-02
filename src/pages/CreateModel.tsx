@@ -15,6 +15,7 @@ import { getAvailableModels, deployModel } from "../service/containerService";
 import EnvironmentVariables from "../components/environmentVariables";
 import ContainerPorts from "@/components/ContainerPorts";
 import { Model } from "../types/types";
+import { useNavigate } from "react-router-dom";
 
 const CreateModelPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>("");
@@ -26,6 +27,7 @@ const CreateModelPage: React.FC = () => {
   const [ports, setPorts] = useState<
     Array<{ port: number; protocol: "tcp" | "udp" }>
   >([]);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
@@ -72,6 +74,7 @@ const CreateModelPage: React.FC = () => {
 
       console.log("Deployment successful:", response);
       alert("Deployment successful!");
+      navigate(`/dashboard/containers/${response.containerId}`);
 
       setContainerName("");
       setSelectedModel("");
@@ -86,7 +89,7 @@ const CreateModelPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl p-6 mx-auto">
+    <div className="p-6 mx-auto max-w-4xl">
       <h1 className="mb-6 text-2xl font-bold text-center">Deploy Container</h1>
 
       <Card>
@@ -138,7 +141,7 @@ const CreateModelPage: React.FC = () => {
         <Button
           onClick={handleDeploy}
           disabled={!selectedModel || !containerName || loading}
-          className="flex items-center gap-2"
+          className="flex gap-2 items-center"
         >
           {loading ? (
             "Deploying..."
