@@ -15,7 +15,7 @@ import {
   deleteApiKey,
   getApiKeysByContainer,
 } from "@/service/apiKeyService";
-import { ContainerDetails, ApiKey } from "@/types/types";
+import { ContainerDetails} from "@/types/types";
 import ApiKeyManager from "@/components/ApiKeyManager";
 
 // Default container structure
