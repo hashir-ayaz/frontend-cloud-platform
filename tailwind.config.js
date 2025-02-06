@@ -1,49 +1,40 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 module.exports = {
-  darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-  	extend: {
-  		colors: {
-  			primary: '#000000',
-  			secondary: '#1C1F26',
-  			accent: '#7C3AED',
-  			pinkishGlow: '#F472B6',
-  			textLight: '#EDEDED',
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
-  		},
-  		fontFamily: {
-  			custom: [
-  				'Lexend',
-  				'sans-serif'
-  			]
-  		},
-  		boxShadow: {
-  			glow: '0 0 40px rgba(124, 58, 237, 0.7), 0 0 50px rgba(244, 114, 182, 0.7)'
-  		},
-  		animation: {
-  			glowPulse: 'pulseGlow 3s infinite ease-in-out'
-  		},
-  		keyframes: {
-  			pulseGlow: {
-  				'0%, 100%': {
-  					boxShadow: '0 0 30px rgba(124, 58, 237, 0.5), 0 0 40px rgba(244, 114, 182, 0.5)'
-  				},
-  				'50%': {
-  					boxShadow: '0 0 50px rgba(124, 58, 237, 0.8), 0 0 60px rgba(244, 114, 182, 0.8)'
-  				}
-  			}
-  		}
-  	}
-  },
-  plugins: [],
-};
+	darkMode: 'class', // dark mode enabled via a 'dark' class on <html> or <body>
+	content: [
+	  "./index.html",
+	  "./src/**/*.{js,ts,jsx,tsx}",
+	],
+	theme: {
+	  extend: {
+		colors: {
+		  background: '#111827', // your dark grey background
+		  primary: {
+			DEFAULT: '#14B8A6', // rich teal
+			light: '#5EEAD4',
+			dark: '#0D9488',
+		  },
+		  secondary: '#233150', // new secondary color
+		},
+		fontFamily: {
+		  sans: ['Lexend', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+		},
+		keyframes: {
+		  fadeInDown: {
+			'0%': { opacity: '0', transform: 'translateY(-20px)' },
+			'100%': { opacity: '1', transform: 'translateY(0)' },
+		  },
+		  fadeInUp: {
+			'0%': { opacity: '0', transform: 'translateY(20px)' },
+			'100%': { opacity: '1', transform: 'translateY(0)' },
+		  },
+		},
+		animation: {
+		  fadeInDown: 'fadeInDown 1.5s ease-out forwards',
+		  fadeInUp: 'fadeInUp 1.5s ease-out forwards',
+		},
+	  },
+	},
+	plugins: [],
+  };
+  
